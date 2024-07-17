@@ -43,6 +43,22 @@ namespace CrtSh
 
             [JsonPropertyName("result_count")]
             public int? ResultCount { get; set; }
+
+            public override string ToString()
+            {
+                return
+                    $"Issuer CA ID: {IssuerCaId} " + Environment.NewLine +
+                    $"Issuer Name: {IssuerName} " + Environment.NewLine +
+                    $"Common Name: {CommonName} " + Environment.NewLine +
+                    $"Name Value: {NameValue} " + Environment.NewLine +
+                    $"ID: {Id} " + Environment.NewLine +
+                    $"Entry Timestamp: {EntryTimestamp} " + Environment.NewLine +
+                    $"Not Before: {NotBefore} " + Environment.NewLine +
+                    $"Not After: {NotAfter} " + Environment.NewLine +
+                    $"Serial Number: {SerialNumber} " + Environment.NewLine +
+                    $"Result Count: {ResultCount} " + Environment.NewLine +
+                    "----------------------";
+            }
         }
     }
 }
