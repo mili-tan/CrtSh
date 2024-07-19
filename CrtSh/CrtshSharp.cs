@@ -56,8 +56,7 @@ namespace CrtSh
                     $"Not Before: {NotBefore} " + Environment.NewLine +
                     $"Not After: {NotAfter} " + Environment.NewLine +
                     $"Serial Number: {SerialNumber} " + Environment.NewLine +
-                    $"Result Count: {ResultCount} " + Environment.NewLine +
-                    "----------------------";
+                    $"Result Count: {ResultCount} ";
             }
         }
     }

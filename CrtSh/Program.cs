@@ -57,6 +57,7 @@ namespace CrtSh
                 foreach (var item in selectedCerts)
                 {
                     Console.WriteLine(item.ToString());
+                    Console.WriteLine("----------------------");
                 }
             });
             cmd.Execute(args);
