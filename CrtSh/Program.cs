@@ -1,6 +1,4 @@
-﻿using System.Runtime.ConstrainedExecution;
-using System.Text.Json;
-using McMaster.Extensions.CommandLineUtils;
+﻿using McMaster.Extensions.CommandLineUtils;
 
 namespace CrtSh
 {
@@ -16,7 +14,7 @@ namespace CrtSh
             var cmd = new CommandLineApplication
             {
                 Name = "CrtSh",
-                Description = "CrtSh - CLI interface for Crt.Sh\r\n" +
+                Description = "CrtSh - CLI interface for Crt.Sh" +
                               Environment.NewLine +
                               $"Copyright (c) {DateTime.Now.Year} Milkey Tan. Code released under the MIT License"
             };
