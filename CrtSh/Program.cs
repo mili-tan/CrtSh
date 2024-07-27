@@ -8,6 +8,7 @@ namespace CrtSh
     {
         public static int RemainingReminderDays = 15;
         public static int StopReminderDays = 15;
+        public static List<string> CaList = new() {"O=Let's Encrypt"};
 
 
         static void Main(string[] args)
@@ -24,7 +25,9 @@ namespace CrtSh
             var queryArgument = cmd.Argument("query",
                 isZh ? "输入查询识别信息（域名、组织名称等）" : " Enter an Identity (Domain Name, Organization Name, etc) ");
             var selectArgument = cmd.Argument("select",
-                isZh ? "要筛选的证书（全部、过期与即将过期）[all/exp]" : "Certificates to filter (all, expired and expiring) [all/exp]");
+                isZh
+                    ? "要筛选的证书（全部、过期与即将过期）[all/expire/include-ca/not-include-ca]"
+                    : "Certificates to filter (all, expired and expiring) [all/expire/include-ca/not-include-ca]");
             var rOption = cmd.Option("-r",
                 isZh ? "当剩余多少天时开始提醒(默认15)" : "How many days are left to start reminding (Default 15)",
                 CommandOptionType.SingleValue);
@@ -54,13 +57,23 @@ namespace CrtSh
                     {
                         selectedCerts.Add(cert);
                     }
-                    else if (selectArgument.Value == "exp")
+                    else if (selectArgument.Value == "exp" || selectArgument.Value == "expire")
                     {
                         var days = (cert.NotAfter!.Value - DateTime.Now).Days;
                         if (days < RemainingReminderDays && days + StopReminderDays > 0)
                         {
                             selectedCerts.Add(cert);
                         }
+                    }
+                    else if (selectArgument.Value == "include-ca")
+                    {
+                        selectedCerts.AddRange(CaList.Where(item => cert.IssuerName!.Contains(item))
+                            .Select(item => cert));
+                    }
+                    else if (selectArgument.Value == "not-include-ca")
+                    {
+                        selectedCerts.AddRange(CaList.Where(item => !cert.IssuerName!.Contains(item))
+                            .Select(item => cert));
                     }
                 }
 
