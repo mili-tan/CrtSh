@@ -7,8 +7,8 @@ namespace CrtSh
         public static int RemainingReminderDays = 15;
         public static int StopReminderDays = 15;
         public static List<string> CaNameList = new() {"O=Let's Encrypt"};
-        public static string TelegramBotToken = String.Empty;
-        public static string TelegramChatId = String.Empty;
+        public static string TelegramBotToken = string.Empty;
+        public static string TelegramChatId = string.Empty;
 
 
         static void Main(string[] args)
@@ -37,7 +37,12 @@ namespace CrtSh
             var cOption = cmd.Option("-c",
                 isZh ? "要筛选的签发者名称内容（以逗号分隔）" : "The issuer names to be selected contain (comma separated)",
                 CommandOptionType.SingleValue);
-
+            var tokenOption = cmd.Option("--tg-token",
+                isZh ? "用于提醒的 Telegram Bot Token" : "Telegram Bot Token for reminders",
+                CommandOptionType.SingleValue);
+            var chatidOption = cmd.Option("--tg-chatid",
+                isZh ? "用于提醒的 Telegram Chat ID" : "Telegram Chat ID for reminders",
+                CommandOptionType.SingleValue);
 
             cmd.OnExecute(() =>
             {
@@ -52,6 +57,8 @@ namespace CrtSh
                 if (rOption.HasValue()) RemainingReminderDays = int.Parse(rOption.Value()!);
                 if (sOption.HasValue()) StopReminderDays = int.Parse(sOption.Value()!);
                 if (cOption.HasValue()) CaNameList = cOption.Value()!.Split(',').ToList();
+                if (chatidOption.HasValue()) TelegramChatId = chatidOption.Value()!.Trim();
+                if (tokenOption.HasValue()) TelegramBotToken = tokenOption.Value()!.Trim();
 
                 var result = CrtshSharp.Search(queryArgument.Value!).Result;
                 var selectedCerts = new List<CrtshSharp.CertificateInformation>();
