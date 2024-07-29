@@ -7,6 +7,8 @@ namespace CrtSh
         public static int RemainingReminderDays = 15;
         public static int StopReminderDays = 15;
         public static List<string> CaNameList = new() {"O=Let's Encrypt"};
+        public static string TelegramBotToken = String.Empty;
+        public static string TelegramChatId = String.Empty;
 
 
         static void Main(string[] args)
@@ -83,6 +85,13 @@ namespace CrtSh
                 {
                     Console.WriteLine(item.ToString());
                     Console.WriteLine("----------------------");
+
+                    if (!string.IsNullOrWhiteSpace(TelegramBotToken) && !string.IsNullOrWhiteSpace(TelegramChatId))
+                    {
+                        new HttpClient().GetStringAsync(
+                            $"https://api.telegram.org/bot{TelegramBotToken}/sendMessage?chat_id={TelegramChatId}&text=" +
+                            Uri.EscapeDataString(item.ToString()));
+                    }
                 }
             });
             cmd.Execute(args);
