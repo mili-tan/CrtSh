@@ -9,6 +9,7 @@ namespace CrtSh
         public static List<string> CaNameList = new() {"O=Let's Encrypt"};
         public static string TelegramBotToken = string.Empty;
         public static string TelegramChatId = string.Empty;
+        public static string Select = "all";
 
 
         static void Main(string[] args)
@@ -47,10 +48,10 @@ namespace CrtSh
 
             cmd.OnExecute(() =>
             {
-                if (!queryArgument.HasValue || !selectArgument.HasValue)
+                if (!queryArgument.HasValue)
                 {
                     Console.WriteLine((isZh ? "缺少所需参数，请尝试: " : "Required parameter is missing, try: ") +
-                                      "crtsh all example.com");
+                                      "crtsh example.com all");
                     cmd.ShowHelp();
                     return;
                 }
@@ -60,16 +61,17 @@ namespace CrtSh
                 if (cOption.HasValue()) CaNameList = cOption.Value()!.Split(',').ToList();
                 if (chatidOption.HasValue()) TelegramChatId = chatidOption.Value()!.Trim();
                 if (tokenOption.HasValue()) TelegramBotToken = tokenOption.Value()!.Trim();
+                if (selectArgument.HasValue) Select = selectArgument.Value ?? "all";
 
                 var result = CrtshSharp.Search(queryArgument.Value!).Result;
                 var selectedCerts = new List<CrtshSharp.CertificateInformation>();
                 foreach (var cert in result)
                 {
-                    if (selectArgument.Value == "all")
+                    if (Select == "all")
                     {
                         selectedCerts.Add(cert);
                     }
-                    else if (selectArgument.Value == "exp" || selectArgument.Value == "expire")
+                    else if (Select == "exp" || Select == "expire")
                     {
                         var days = (cert.NotAfter!.Value - DateTime.Now).Days;
                         if (days < RemainingReminderDays && days + StopReminderDays > 0)
@@ -77,12 +79,12 @@ namespace CrtSh
                             selectedCerts.Add(cert);
                         }
                     }
-                    else if (selectArgument.Value == "include-ca")
+                    else if (Select == "include-ca")
                     {
                         selectedCerts.AddRange(CaNameList.Where(item => cert.IssuerName!.Contains(item))
                             .Select(item => cert));
                     }
-                    else if (selectArgument.Value == "not-include-ca")
+                    else if (Select == "not-include-ca")
                     {
                         selectedCerts.AddRange(CaNameList.Where(item => !cert.IssuerName!.Contains(item))
                             .Select(item => cert));
