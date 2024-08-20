@@ -5,10 +5,16 @@ namespace CrtSh
 {
     public class CrtshSharp
     {
-        public static async Task<List<CertificateInformation>> Search(string query)
+        public string Url { get; set; } = "https://crt.sh/";
+
+        public CrtshSharp(string url = "https://crt.sh/")
         {
-            var url = $"https://crt.sh/?q={query}&output=json";
-            var response = await new HttpClient().GetStringAsync(url);
+            Url = url;
+        }
+
+        public async Task<List<CertificateInformation>> Search(string query)
+        {
+            var response = await new HttpClient().GetStringAsync(Url + $"?q={query}&output=json");
             return JsonSerializer.Deserialize<List<CertificateInformation>>(response) ?? [];
         }
 

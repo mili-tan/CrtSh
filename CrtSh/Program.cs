@@ -63,7 +63,7 @@ namespace CrtSh
                 if (tokenOption.HasValue()) TelegramBotToken = tokenOption.Value()!.Trim();
                 if (selectArgument.HasValue) Select = selectArgument.Value ?? "all";
 
-                var result = CrtshSharp.Search(queryArgument.Value!).Result;
+                var result = new CrtshSharp().Search(queryArgument.Value!).Result;
                 var selectedCerts = new List<CrtshSharp.CertificateInformation>();
                 foreach (var cert in result)
                 {
