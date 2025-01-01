@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace CrtSh
 {
-    public class CrtshSharp
+    public partial class CrtshSharp
     {
         public string Url { get; set; } = "https://crt.sh/";
 
@@ -15,7 +15,8 @@ namespace CrtSh
         public async Task<List<CertificateInformation>> Search(string query)
         {
             var response = await new HttpClient().GetStringAsync(Url + $"?q={query}&output=json");
-            return JsonSerializer.Deserialize<List<CertificateInformation>>(response) ?? [];
+            return JsonSerializer.Deserialize(response, typeof(List<CertificateInformation>), SourceGenerationContext.Default)
+                as List<CertificateInformation> ?? [];
         }
 
         public class CertificateInformation
@@ -64,6 +65,13 @@ namespace CrtSh
                     $"Serial Number: {SerialNumber} " + Environment.NewLine +
                     $"Result Count: {ResultCount} ";
             }
+        }
+
+        [JsonSourceGenerationOptions(WriteIndented = true)]
+        [JsonSerializable(typeof(CertificateInformation))]
+        [JsonSerializable(typeof(List<CertificateInformation>))]
+        internal partial class SourceGenerationContext : JsonSerializerContext
+        {
         }
     }
 }
